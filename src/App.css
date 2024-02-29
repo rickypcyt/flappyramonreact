@@ -1,38 +1,39 @@
+/* App.css */
+
+/* Estilo para el contenedor principal */
 .App {
-  text-align: center;
+  position: relative;
+  /* Posición relativa para que los elementos internos se posicionen correctamente */
+  width: auto;
+  /* Ancho del contenedor principal */
+  height: 742px;
+  /* Altura del contenedor principal */
+  margin: 0 auto;
+  /* Centrar el contenedor horizontalmente */
+  overflow: hidden;
+  /* Oculta cualquier contenido que se desborde del contenedor */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Estilo para la imagen de fondo */
+.background {
+  position: absolute;
+  /* Posición absoluta para que la imagen de fondo se superponga a otros elementos */
+  width: 100%;
+  /* Ancho al 100% del contenedor principal */
+  height: 100%;
+  /* Altura al 100% del contenedor principal */
+  object-fit: cover;
+  /* Escala la imagen para que cubra todo el contenedor manteniendo su relación de aspecto */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Estilo para la imagen de la base */
+.base {
+  position: absolute;
+  /* Posición absoluta para que la imagen de la base se superponga a otros elementos */
+  width: auto;
+  /* Ancho de la imagen de la base */
+  height: auto;
+  /* Altura ajustada automáticamente para mantener la proporción */
+  bottom: 0;
+  /* Coloca la base en la parte inferior del contenedor principal */
 }
