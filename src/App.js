@@ -8,16 +8,16 @@ import birdImage from './Images/ramos/ramon1.png'; // Agrega la ruta de la image
 function App() {
   const [basePosition, setBasePosition] = useState(0);
   const [birdPosition, setBirdPosition] = useState(250); // Posición inicial del pájaro
-  const [gravity, setGravity] = useState(0); // Gravedad inicial
+  const [birdVelocity, setBirdVelocity] = useState(0); // Velocidad inicial del pájaro
 
   const handleJump = () => {
-    setGravity(-5); // Cambia la velocidad hacia arriba cuando el pájaro salta
+    setBirdVelocity(-8); // Cambia la velocidad hacia arriba cuando el pájaro salta
   };
 
   useEffect(() => {
     const birdInterval = setInterval(() => {
-      setBirdPosition((prevPosition) => prevPosition + gravity); // Actualiza la posición del pájaro con la gravedad
-      setGravity((prevGravity) => prevGravity + 0.2); // Aumenta la gravedad para simular la caída
+      setBirdPosition((prevPosition) => prevPosition + birdVelocity); // Actualiza la posición del pájaro con la velocidad
+      setBirdVelocity((prevVelocity) => prevVelocity + 0.5); // Aumenta la velocidad para simular la gravedad hacia abajo
     }, 30);
 
     const baseInterval = setInterval(() => {
@@ -38,7 +38,7 @@ function App() {
       clearInterval(baseInterval);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [gravity]);
+  }, [birdVelocity]);
 
   return (
     <div className="App">
