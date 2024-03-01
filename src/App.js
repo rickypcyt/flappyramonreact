@@ -1,46 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-// Importa tus imágenes aquí
-import backgroundImage from './Images/bgx4.png'; // Reemplaza 'background.jpg' con la ruta de tu imagen de fondo
-import baseImage from './Images/basex5.png'; // Reemplaza 'base.png' con la ruta de tu imagen base
+import backgroundImage from './Images/bgx4.png';
+import baseImage from './Images/basex5.png';
+import birdImage from './Images/ramos/ramon1.png'; // Agrega la ruta de la imagen del pájaro
 
 function App() {
-  // Estado para controlar la posición de la base
   const [basePosition, setBasePosition] = useState(0);
+  const [birdPosition, setBirdPosition] = useState(250); // Posición inicial del pájaro
+  const [gravity, setGravity] = useState(0); // Gravedad inicial
 
-  // Función para actualizar la posición de la base en el eje x
-  const updateBasePosition = () => {
-    // Aumentamos la posición de la base en el eje x
-    setBasePosition((prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)); // Sumamos 100 para solapar las imágenes y evitar espacios en blanco
+  const handleJump = () => {
+    setGravity(-5); // Cambia la velocidad hacia arriba cuando el pájaro salta
   };
 
-  // Usamos useEffect para actualizar la posición de la base en el eje x cada cierto intervalo de tiempo
   useEffect(() => {
-    const interval = setInterval(updateBasePosition, 10); // Puedes ajustar el intervalo según tus necesidades
-    return () => clearInterval(interval);
-  }, []);
+    const birdInterval = setInterval(() => {
+      setBirdPosition((prevPosition) => prevPosition + gravity); // Actualiza la posición del pájaro con la gravedad
+      setGravity((prevGravity) => prevGravity + 0.2); // Aumenta la gravedad para simular la caída
+    }, 30);
+
+    const baseInterval = setInterval(() => {
+      setBasePosition((prevPosition) => (prevPosition + 1) % (window.innerWidth + 100));
+    }, 10);
+
+    const handleKeyDown = (e) => {
+      if (e.keyCode === 32) {
+        // KeyCode 32 para la barra espaciadora
+        handleJump();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      clearInterval(birdInterval);
+      clearInterval(baseInterval);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [gravity]);
 
   return (
     <div className="App">
-      {/* Imagen de fondo */}
       <img src={backgroundImage} alt="Background" className="background" />
 
-      {/* Imágenes de base */}
       <div className="base-container">
         <img
           src={baseImage}
           alt="Base"
           className="base"
-          style={{ left: `${basePosition}px`, bottom: '0' }} // Ajusta la posición de la base según el estado basePosition
+          style={{ left: `${basePosition}px`, bottom: '0' }}
         />
         <img
           src={baseImage}
           alt="Base"
           className="base"
-          style={{ left: `${basePosition - window.innerWidth - 100}px`, bottom: '0' }} // La segunda imagen se superpone a la primera para crear un efecto de bucle
+          style={{ left: `${basePosition - window.innerWidth - 100}px`, bottom: '0' }}
         />
       </div>
+
+      <img
+        src={birdImage}
+        alt="Bird"
+        className="bird"
+        style={{ left: '100px', bottom: `${birdPosition}px` }}
+      />
     </div>
   );
 }
