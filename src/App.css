@@ -62,7 +62,23 @@
 
 .bird {
   position: absolute;
-  width: 100pxpx;
+  width: 100px;
   /* Ajusta el tamaño del pájaro según sea necesario */
   height: auto;
+}
+
+.tube {
+  position: absolute;
+}
+
+.tube img {
+  position: absolute;
+}
+
+.tube .tube-upper {
+  transform: rotate(180deg);
+}
+
+.tube .tube-lower {
+  /* Estilos para el tubo inferior */
 }
