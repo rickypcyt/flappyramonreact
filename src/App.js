@@ -5,6 +5,28 @@ import backgroundImage from './Images/bgx4.png';
 import baseImage from './Images/basex5.png';
 import birdImage from './Images/ramos/ramon1.png'; // Agrega la ruta de la imagen del pájaro
 
+
+
+function Obstacle ({ positionX, gapTop, gapBottom}) {
+  return (
+
+      <div className="obstacle-container">
+        <img
+            src = {obstacleImage}
+            alt ="Obstacle"
+            className ="obstacle"
+            style = {{ left: positionX, top: 0, height: gapTop }}
+        />
+        <img
+            src = {obstacleImage}
+            alt = "Obstacle"
+            className="obstacle"
+            style = {{ left: positionX, top: 0, height: gapTop}}
+        />
+      </div>
+  );
+}
+
 function Obstacle ({ positionX, gapTop, gapBottom}) {
   return (
 
