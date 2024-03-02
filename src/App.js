@@ -27,25 +27,7 @@ function Obstacle ({ positionX, gapTop, gapBottom}) {
   );
 }
 
-function Obstacle ({ positionX, gapTop, gapBottom}) {
-  return (
 
-      <div className="obstacle-container">
-        <img
-            src = {obstacleImage}
-            alt ="Obstacle"
-            className ="obstacle"
-            style = {{ left: positionX, top: 0, height: gapTop }}
-        />
-        <img
-            src = {obstacleImage}
-            alt = "Obstacle"
-            className="obstacle"
-            style = {{ left: positionX, top: 0, height: gapTop}}
-        />
-      </div>
-  );
-}
 
 
 function App() {
