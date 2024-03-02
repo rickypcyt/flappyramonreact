@@ -1,81 +1,41 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import backgroundImage from './Images/bgx4.png';
 import baseImage from './Images/basex5.png';
 import birdImage from './Images/ramos/ramon1.png'; // Agrega la ruta de la imagen del pájaro
 
-
-
-function Obstacle ({ positionX, gapTop, gapBottom}) {
-  return (
-
-      <div className="obstacle-container">
-        <img
-            src = {obstacleImage}
-            alt ="Obstacle"
-            className ="obstacle"
-            style = {{ left: positionX, top: 0, height: gapTop }}
-        />
-        <img
-            src = {obstacleImage}
-            alt = "Obstacle"
-            className="obstacle"
-            style = {{ left: positionX, top: 0, height: gapTop}}
-        />
-      </div>
-  );
-}
-
-
-
-
 function App() {
   const [basePosition, setBasePosition] = useState(0);
   const [birdPosition, setBirdPosition] = useState(250); // Posición inicial del pájaro
   const [birdVelocity, setBirdVelocity] = useState(0); // Velocidad inicial del pájaro
-  const [lastFrameTime, setLastFrameTime] = useState(0);
-  const birdRef = useRef(null);
-  const gravity = 0.0029; // Fuerza de gravedad hacia abajo (ajustado)
+  const gravity = -0.5; // Fuerza de gravedad hacia arriba
 
   useEffect(() => {
+    const birdInterval = setInterval(() => {
+      setBirdVelocity((prevVelocity) => prevVelocity + gravity); // Disminuye la velocidad del pájaro debido a la gravedad
+      setBirdPosition((prevPosition) => prevPosition + birdVelocity); // Actualiza la posición del pájaro con la velocidad
+    }, 30);
+
+    const baseInterval = setInterval(() => {
+      setBasePosition((prevPosition) => (prevPosition + 1) % (window.innerWidth + 100));
+    }, 10);
+
     const handleKeyDown = (e) => {
       if (e.keyCode === 32) {
         // KeyCode 32 para la barra espaciadora
-        setBirdVelocity(-0.3); // Salto hacia arriba (ajustado)
+        setBirdVelocity(8); // Salto hacia arriba
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
+      clearInterval(birdInterval);
+      clearInterval(baseInterval);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
-
-  useEffect(() => {
-    const animate = (timestamp) => {
-      const deltaTime = timestamp - lastFrameTime;
-      setLastFrameTime(timestamp);
-      
-      setBirdVelocity((prevVelocity) => prevVelocity + gravity * deltaTime); // Aumenta la velocidad del pájaro debido a la gravedad
-      setBirdPosition((prevPosition) => prevPosition + birdVelocity * deltaTime); // Actualiza la posición del pájaro con la velocidad
-      if (birdRef.current) {
-        birdRef.current.style.transform = `translateY(${birdPosition}px)`;
-      }
-      requestAnimationFrame(animate);
-    };
-
-    requestAnimationFrame(animate);
-
-    const baseInterval = setInterval(() => {
-      setBasePosition((prevPosition) => (prevPosition + 1) % (window.innerWidth + 100));
-    }, 10);
-
-    return () => {
-      clearInterval(baseInterval);
-    };
-  }, [birdPosition, birdVelocity, lastFrameTime]);
+  }, [birdVelocity]);
 
   return (
     <div className="App">
@@ -97,11 +57,10 @@ function App() {
       </div>
 
       <img
-        ref={birdRef}
         src={birdImage}
         alt="Bird"
         className="bird"
-        style={{ left: '100px', bottom: '0', position: 'absolute' }}
+        style={{ left: '100px', bottom: `${birdPosition}px` }}
       />
     </div>
   );
