@@ -62,8 +62,7 @@
 
 .bird {
   position: absolute;
-  width: 50px;
+  width: 100pxpx;
   /* Ajusta el tamaño del pájaro según sea necesario */
-  height: 50px;
+  height: auto;
 }
-
