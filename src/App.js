@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+
 import backgroundImage from "./Images/bgx4.png";
 import baseImage from "./Images/basex5.png";
 import birdImage from "./Images/ramos/ramon1.png";
@@ -10,9 +11,9 @@ function App() {
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
   const [birdVelocity, setBirdVelocity] = useState(0);
   const gravity = -0.6;
-  //const tubeWidth = 52;
-  //const tubeHeight = 320;
-  const tubeGap = 150;
+  const tubeWidth = 52;
+  const tubeHeight = 320;
+  const tubeGap = 200;
   const tubeSpeed = 5;
 
   const [tubes, setTubes] = useState([]);
@@ -36,28 +37,26 @@ function App() {
             ...tube,
             x: tube.x - tubeSpeed,
           }))
-          .filter((tube) => tube.x > -tubeWidth); //Adjust filtering based on tube 
+          .filter((tube) => tube.x > -tubeWidth);
 
         if (
           newTubes.length === 0 ||
-          window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap * 2
+          window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap
         ) {
-          const minY = 50; // Ajusta esta posición según tu preferencia
-          const maxY = window.innerHeight - tubeGap;
-          const randomHeight = Math.floor(Math.random() * (maxY - minY)) + minY;
-          const randomGap = Math.floor(Math.random() * 100) - 50; // Adjust gap variation
-          //const randomY = Math.random() * (maxY - minY) + minY;
+          const minY = window.innerHeight * -0.01; // Ajusta según la altura mínima deseada (25% de la altura de la ventana)
+          const maxY = window.innerHeight * -0.15; // Ajusta según la altura máxima deseada (75% de la altura de la ventana)
+
+          const randomY = Math.random() * (maxY - minY) + minY;
           newTubes.push({
             x: window.innerWidth,
-            y: randomHeight + randomGap, // Adjust y position based on gap variation
-            width: Math.floor(Math.random() * 50) + 30, // Adjust min/max width as needed
-            height: Math.floor(Math.random() * 200) + 150, // Adjust min/max height as needed
+            yUpper: randomY, // Posición superior
+            yLower: randomY - 10, // Ajusta para garantizar el espacio constante entre los tubos
           });
-       }
+        }
 
         return newTubes;
       });
-    }, 3000);
+    }, 30);
 
     const handleKeyDown = (e) => {
       if (e.keyCode === 32) {
@@ -79,24 +78,6 @@ function App() {
     <div className="App">
       <img src={backgroundImage} alt="Background" className="background" />
 
-      <div className="base-container">
-        <img
-          src={baseImage}
-          alt="Base"
-          className="base"
-          style={{ left: `${basePosition}px`, bottom: "0" }}
-        />
-        <img
-          src={baseImage}
-          alt="Base"
-          className="base"
-          style={{
-            left: `${basePosition - window.innerWidth - 100}px`,
-            bottom: "0",
-          }}
-        />
-      </div>
-
       {tubes.map((tube, index) => (
         <div
           key={index}
@@ -110,17 +91,40 @@ function App() {
             style={{
               width: tubeWidth,
               height: tubeHeight,
-              bottom: window.innerHeight - tube.y - tubeHeight,
+              bottom: window.innerHeight - tube.yUpper - tubeHeight,
             }}
           />
           <img
             className="tube-lower"
             src={tubeImage}
             alt="Tube"
-            style={{ width: tubeWidth, height: tubeHeight, bottom: tube.y }}
+            style={{
+              width: tubeWidth,
+              height: tubeHeight,
+              bottom: tube.yLower,
+              zIndex: 0,
+            }}
           />
         </div>
       ))}
+
+      <div className="base-container">
+        <img
+          src={baseImage}
+          alt="Base"
+          className="base"
+          style={{ left: `${basePosition}px`, bottom: "0", zIndex: 1 }}
+        />
+        <img
+          src={baseImage}
+          alt="Base"
+          className="base"
+          style={{
+            left: `${basePosition - window.innerWidth - 100}px`,
+            bottom: "0",
+          }}
+        />
+      </div>
 
       <img
         src={birdImage}
@@ -131,4 +135,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
