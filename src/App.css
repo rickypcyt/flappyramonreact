@@ -77,10 +77,12 @@
 
 .tube .tube-upper {
   transform: rotate(180deg);
+  width: 52px; 
 }
 
-.tube .tube-lower {
-  /* Estilos para el tubo inferior */
+.tube .tube-lower{
+  width: 52px;
 }
+
 
 /*Norway TE VOY A HACER EL BUENO HP*/

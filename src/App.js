@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-
 import backgroundImage from "./Images/bgx4.png";
 import baseImage from "./Images/basex5.png";
 import birdImage from "./Images/ramos/ramon1.png";
@@ -11,8 +10,8 @@ function App() {
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
   const [birdVelocity, setBirdVelocity] = useState(0);
   const gravity = -0.6;
-  const tubeWidth = 52;
-  const tubeHeight = 320;
+  //const tubeWidth = 52;
+  //const tubeHeight = 320;
   const tubeGap = 150;
   const tubeSpeed = 5;
 
@@ -37,24 +36,28 @@ function App() {
             ...tube,
             x: tube.x - tubeSpeed,
           }))
-          .filter((tube) => tube.x > -tubeWidth);
+          .filter((tube) => tube.x > -tubeWidth); //Adjust filtering based on tube 
 
         if (
           newTubes.length === 0 ||
           window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap * 2
         ) {
           const minY = 50; // Ajusta esta posición según tu preferencia
-          const maxY = window.innerHeight - tubeGap - tubeHeight;
-          const randomY = Math.random() * (maxY - minY) + minY;
+          const maxY = window.innerHeight - tubeGap;
+          const randomHeight = Math.floor(Math.random() * (maxY - minY)) + minY;
+          const randomGap = Math.floor(Math.random() * 100) - 50; // Adjust gap variation
+          //const randomY = Math.random() * (maxY - minY) + minY;
           newTubes.push({
             x: window.innerWidth,
-            y: 0, // Posición superior
+            y: randomHeight + randomGap, // Adjust y position based on gap variation
+            width: Math.floor(Math.random() * 50) + 30, // Adjust min/max width as needed
+            height: Math.floor(Math.random() * 200) + 150, // Adjust min/max height as needed
           });
-        }
+       }
 
         return newTubes;
       });
-    }, 30);
+    }, 3000);
 
     const handleKeyDown = (e) => {
       if (e.keyCode === 32) {
