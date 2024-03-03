@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
 
 import backgroundImage from "./Images/bgx4.png";
@@ -10,7 +10,7 @@ function App() {
   const [basePosition, setBasePosition] = useState(0);
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
   const [birdVelocity, setBirdVelocity] = useState(0);
-  const gravity = -0.6;
+  const gravity = -0.25;
   const tubeWidth = 52;
   const tubeHeight = 320;
   const tubeGap = 200;
@@ -18,19 +18,16 @@ function App() {
 
   const [tubes, setTubes] = useState([]);
 
+  const animateRef = useRef(null);
+
   useEffect(() => {
-    const birdInterval = setInterval(() => {
+    const animate = () => {
       setBirdVelocity((prevVelocity) => prevVelocity + gravity);
       setBirdPosition((prevPosition) => prevPosition + birdVelocity);
-    }, 30);
-
-    const baseInterval = setInterval(() => {
       setBasePosition(
         (prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)
       );
-    }, 10);
 
-    const tubeInterval = setInterval(() => {
       setTubes((prevTubes) => {
         const newTubes = prevTubes
           .map((tube) => ({
@@ -43,33 +40,35 @@ function App() {
           newTubes.length === 0 ||
           window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap
         ) {
-          const minY = window.innerHeight * -0.01; // Ajusta según la altura mínima deseada (25% de la altura de la ventana)
-          const maxY = window.innerHeight * -0.15; // Ajusta según la altura máxima deseada (75% de la altura de la ventana)
+          const minY = window.innerHeight * -0.01;
+          const maxY = window.innerHeight * -0.15;
 
           const randomY = Math.random() * (maxY - minY) + minY;
           newTubes.push({
             x: window.innerWidth,
-            yUpper: randomY, // Posición superior
-            yLower: randomY - 10, // Ajusta para garantizar el espacio constante entre los tubos
+            yUpper: randomY,
+            yLower: randomY - 10,
           });
         }
 
         return newTubes;
       });
-    }, 30);
+
+      animateRef.current = requestAnimationFrame(animate);
+    };
+
+    animateRef.current = requestAnimationFrame(animate);
 
     const handleKeyDown = (e) => {
       if (e.keyCode === 32) {
-        setBirdVelocity(10);
+        setBirdVelocity(7);
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      clearInterval(birdInterval);
-      clearInterval(baseInterval);
-      clearInterval(tubeInterval);
+      cancelAnimationFrame(animateRef.current);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [birdVelocity]);
