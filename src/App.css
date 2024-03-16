@@ -73,6 +73,7 @@
 
 .tube img {
   position: absolute;
+  border: 1px solid black;
 
 }
 

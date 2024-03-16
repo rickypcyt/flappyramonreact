@@ -20,48 +20,6 @@ function App() {
 
   const animateRef = useRef(null);
 
-   // Function to detect collision between bird and tubes
-   const detectCollision = () => {
-    const birdWidth = 80;
-    const birdHeight = 50;
-
-    const birdBox = {
-      top: birdPosition,
-      bottom: birdPosition + birdHeight,
-      left: 100,
-      right: 100 + birdWidth,
-    };
-
-    for (const tube of tubes) {
-      const upperTubeBox = {
-        top: window.innerHeight - tube.yUpper - tubeHeight,
-        bottom: window.innerHeight - tube.yUpper,
-        left: tube.x,
-        right: tube.x + tubeWidth,
-      };
-
-      const lowerTubeBox = {
-        top: window.innerHeight - tube.yLower - tubeHeight,
-        bottom: window.innerHeight - tube.yLower,
-        left: tube.x,
-        right: tube.x + tubeWidth,
-      };
-
-      if (
-        (birdBox.right > upperTubeBox.left &&
-          birdBox.left < upperTubeBox.right &&
-          birdBox.top < upperTubeBox.bottom) ||
-        (birdBox.right > lowerTubeBox.left &&
-          birdBox.left < lowerTubeBox.right &&
-          birdBox.bottom > lowerTubeBox.top)
-      ) {
-        return true;
-      }
-    }
-
-    return false;
-  };
-
   useEffect(() => {
     const animate = () => {
       setBirdVelocity((prevVelocity) => prevVelocity + gravity);
@@ -69,6 +27,40 @@ function App() {
       setBasePosition(
         (prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)
       );
+
+      // Calcula la posición del pájaro y los tubos
+      const birdWidth = 80;
+      const birdHeight = 50;
+      const birdLeft = 100;
+      const birdRight = birdLeft + birdWidth;
+      const birdTop = birdPosition;
+      const birdBottom = birdPosition + birdHeight;
+
+      for (const tube of tubes) {
+        const upperTubeLeft = tube.x;
+        const upperTubeRight = tube.x + tubeWidth;
+        const upperTubeBottom = window.innerHeight - tube.yUpper;
+
+        const lowerTubeLeft = tube.x;
+        const lowerTubeRight = tube.x + tubeWidth;
+        const lowerTubeTop = window.innerHeight - tube.yLower - tubeHeight;
+
+        // Comprueba colisiones con los tubos superiores e inferiores
+        const isCollidingWithUpperTube =
+          birdRight > upperTubeLeft &&
+          birdLeft < upperTubeRight &&
+          birdTop < upperTubeBottom;
+        const isCollidingWithLowerTube =
+          birdRight > lowerTubeLeft &&
+          birdLeft < lowerTubeRight &&
+          birdBottom > lowerTubeTop;
+
+        if (isCollidingWithUpperTube || isCollidingWithLowerTube) {
+          // Si hay colisión, detenemos el juego
+          cancelAnimationFrame(animateRef.current);
+          return;
+        }
+      }
 
       setTubes((prevTubes) => {
         const newTubes = prevTubes
@@ -113,7 +105,7 @@ function App() {
       cancelAnimationFrame(animateRef.current);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [birdVelocity]);
+  }, [birdVelocity, tubes]); // Listen for changes in tubes as well for collision detection
 
   return (
     <div className="App">
