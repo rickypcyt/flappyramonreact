@@ -20,6 +20,48 @@ function App() {
 
   const animateRef = useRef(null);
 
+   // Function to detect collision between bird and tubes
+   const detectCollision = () => {
+    const birdWidth = 80;
+    const birdHeight = 50;
+
+    const birdBox = {
+      top: birdPosition,
+      bottom: birdPosition + birdHeight,
+      left: 100,
+      right: 100 + birdWidth,
+    };
+
+    for (const tube of tubes) {
+      const upperTubeBox = {
+        top: window.innerHeight - tube.yUpper - tubeHeight,
+        bottom: window.innerHeight - tube.yUpper,
+        left: tube.x,
+        right: tube.x + tubeWidth,
+      };
+
+      const lowerTubeBox = {
+        top: window.innerHeight - tube.yLower - tubeHeight,
+        bottom: window.innerHeight - tube.yLower,
+        left: tube.x,
+        right: tube.x + tubeWidth,
+      };
+
+      if (
+        (birdBox.right > upperTubeBox.left &&
+          birdBox.left < upperTubeBox.right &&
+          birdBox.top < upperTubeBox.bottom) ||
+        (birdBox.right > lowerTubeBox.left &&
+          birdBox.left < lowerTubeBox.right &&
+          birdBox.bottom > lowerTubeBox.top)
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
   useEffect(() => {
     const animate = () => {
       setBirdVelocity((prevVelocity) => prevVelocity + gravity);
