@@ -86,5 +86,12 @@
   width: 52px;
 }
 
+.start-message {
+  text-align: center;
+  font-size: xx-large;
+  font-family: 'FlappyBird';
+  color: white;
+  margin-top: 10%;
+}
 
 /*Norway TE VOY A HACER EL BUENO HP*/

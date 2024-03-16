@@ -5,11 +5,14 @@ import backgroundImage from "./Images/bgx4.png";
 import baseImage from "./Images/basex5.png";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
+import './fonts.css';
+
 
 function App() {
   const [basePosition, setBasePosition] = useState(0);
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
   const [birdVelocity, setBirdVelocity] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
   const gravity = -0.25;
   const tubeWidth = 52;
   const tubeHeight = 320;
@@ -21,80 +24,10 @@ function App() {
   const animateRef = useRef(null);
 
   useEffect(() => {
-    const animate = () => {
-      setBirdVelocity((prevVelocity) => prevVelocity + gravity);
-      setBirdPosition((prevPosition) => prevPosition + birdVelocity);
-      setBasePosition(
-        (prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)
-      );
-
-      // Calcula la posición del pájaro y los tubos
-      const birdWidth = 80;
-      const birdHeight = 50;
-      const birdLeft = 100;
-      const birdRight = birdLeft + birdWidth;
-      const birdTop = birdPosition;
-      const birdBottom = birdPosition + birdHeight;
-
-      for (const tube of tubes) {
-        const upperTubeLeft = tube.x;
-        const upperTubeRight = tube.x + tubeWidth;
-        const upperTubeBottom = window.innerHeight - tube.yUpper;
-
-        const lowerTubeLeft = tube.x;
-        const lowerTubeRight = tube.x + tubeWidth;
-        const lowerTubeTop = window.innerHeight - tube.yLower - tubeHeight;
-
-        // Comprueba colisiones con los tubos superiores e inferiores
-        const isCollidingWithUpperTube =
-          birdRight > upperTubeLeft &&
-          birdLeft < upperTubeRight &&
-          birdTop < upperTubeBottom;
-        const isCollidingWithLowerTube =
-          birdRight > lowerTubeLeft &&
-          birdLeft < lowerTubeRight &&
-          birdBottom > lowerTubeTop;
-
-        if (isCollidingWithUpperTube || isCollidingWithLowerTube) {
-          // Si hay colisión, detenemos el juego
-          cancelAnimationFrame(animateRef.current);
-          return;
-        }
-      }
-
-      setTubes((prevTubes) => {
-        const newTubes = prevTubes
-          .map((tube) => ({
-            ...tube,
-            x: tube.x - tubeSpeed,
-          }))
-          .filter((tube) => tube.x > -tubeWidth);
-
-        if (
-          newTubes.length === 0 ||
-          window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap
-        ) {
-          const minY = window.innerHeight * -0.01;
-          const maxY = window.innerHeight * -0.15;
-
-          const randomY = Math.random() * (maxY - minY) + minY;
-          newTubes.push({
-            x: window.innerWidth,
-            yUpper: randomY,
-            yLower: randomY - 10,
-          });
-        }
-
-        return newTubes;
-      });
-
-      animateRef.current = requestAnimationFrame(animate);
-    };
-
-    animateRef.current = requestAnimationFrame(animate);
-
     const handleKeyDown = (e) => {
-      if (e.keyCode === 32) {
+      if (!gameStarted && e.keyCode === 32) {
+        setGameStarted(true);
+      } else if (gameStarted && e.keyCode === 32) {
         setBirdVelocity(7);
       }
     };
@@ -102,10 +35,89 @@ function App() {
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      cancelAnimationFrame(animateRef.current);
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [birdVelocity, tubes]); // Listen for changes in tubes as well for collision detection
+  }, [gameStarted]);
+
+  useEffect(() => {
+    if (gameStarted) {
+      const animate = () => {
+        setBirdVelocity((prevVelocity) => prevVelocity + gravity);
+        setBirdPosition((prevPosition) => prevPosition + birdVelocity);
+        setBasePosition(
+          (prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)
+        );
+
+        // Calcula la posición del pájaro y los tubos
+        const birdWidth = 80;
+        const birdHeight = 50;
+        const birdLeft = 100;
+        const birdRight = birdLeft + birdWidth;
+        const birdTop = birdPosition;
+        const birdBottom = birdPosition + birdHeight;
+
+        for (const tube of tubes) {
+          const upperTubeLeft = tube.x;
+          const upperTubeRight = tube.x + tubeWidth;
+          const upperTubeBottom = window.innerHeight - tube.yUpper;
+
+          const lowerTubeLeft = tube.x;
+          const lowerTubeRight = tube.x + tubeWidth;
+          const lowerTubeTop = window.innerHeight - tube.yLower - tubeHeight;
+
+          // Comprueba colisiones con los tubos superiores e inferiores
+          const isCollidingWithUpperTube =
+            birdRight > upperTubeLeft &&
+            birdLeft < upperTubeRight &&
+            birdTop < upperTubeBottom;
+          const isCollidingWithLowerTube =
+            birdRight > lowerTubeLeft &&
+            birdLeft < lowerTubeRight &&
+            birdBottom > lowerTubeTop;
+
+          if (isCollidingWithUpperTube || isCollidingWithLowerTube) {
+            // Si hay colisión, detenemos el juego
+            cancelAnimationFrame(animateRef.current);
+            return;
+          }
+        }
+
+        setTubes((prevTubes) => {
+          const newTubes = prevTubes
+            .map((tube) => ({
+              ...tube,
+              x: tube.x - tubeSpeed,
+            }))
+            .filter((tube) => tube.x > -tubeWidth);
+
+          if (
+            newTubes.length === 0 ||
+            window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap
+          ) {
+            const minY = window.innerHeight * -0.01;
+            const maxY = window.innerHeight * -0.15;
+
+            const randomY = Math.random() * (maxY - minY) + minY;
+            newTubes.push({
+              x: window.innerWidth,
+              yUpper: randomY,
+              yLower: randomY - 10,
+            });
+          }
+
+          return newTubes;
+        });
+
+        animateRef.current = requestAnimationFrame(animate);
+      };
+
+      animateRef.current = requestAnimationFrame(animate);
+
+      return () => {
+        cancelAnimationFrame(animateRef.current);
+      };
+    }
+  }, [gameStarted, birdVelocity, tubes]);
 
   return (
     <div className="App">
@@ -159,12 +171,19 @@ function App() {
         />
       </div>
 
-      <img
-        src={birdImage}
-        alt="Bird"
-        className="bird"
-        style={{ left: "100px", bottom: `${birdPosition}px` }}
-      />
+      {gameStarted && (
+        <img
+          src={birdImage}
+          alt="Bird"
+          className="bird"
+          style={{ left: "100px", bottom: `${birdPosition}px` }}
+        />
+      )}
+      {!gameStarted && (
+        <div className="start-message">
+          Press Spacebar to Start
+        </div>
+      )}
     </div>
   );
 }
