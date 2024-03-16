@@ -13,7 +13,7 @@ function App() {
   const gravity = -0.25;
   const tubeWidth = 52;
   const tubeHeight = 320;
-  const tubeGap = 200;
+  const tubeGap = 500;
   const tubeSpeed = 5;
 
   const [tubes, setTubes] = useState([]);
