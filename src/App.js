@@ -5,8 +5,7 @@ import backgroundImage from "./Images/bgx4.png";
 import baseImage from "./Images/basex5.png";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
-import './fonts.css';
-
+import "./fonts.css";
 
 function App() {
   const [basePosition, setBasePosition] = useState(0);
@@ -181,7 +180,11 @@ function App() {
       )}
       {!gameStarted && (
         <div className="start-message">
-          Press Spacebar to Start
+          <h1>FLAPPY RAMON</h1>
+          <div className="bird-container">
+            <img src={birdImage} alt="Bird" className="start-bird" />
+          </div>
+          <h1 >PRESS ANY BUTTON TO START</h1>
         </div>
       )}
     </div>

@@ -91,7 +91,36 @@
   font-size: xx-large;
   font-family: 'FlappyBird';
   color: white;
-  margin-top: 10%;
+  margin-top: 5%;
+}
+
+@keyframes breathing {
+  0% {
+    transform: scale(1);
+  }
+
+  /* Tamaño original */
+  50% {
+    transform: scale(0.8);
+  }
+
+  /* Tamaño pequeño */
+  100% {
+    transform: scale(1);
+  }
+
+  /* Tamaño original */
+}
+
+.start-bird {
+  width: 150px;
+  /* Tamaño original */
+  height: 150px;
+  animation: breathing 3s infinite;
+  /* 3 segundos de duración de la animación, se repite infinitamente */
+  margin-bottom: 8%;
+  margin-top: 2%;
+
 }
 
 /*Norway TE VOY A HACER EL BUENO HP*/
