@@ -13,6 +13,7 @@ function App() {
   const [birdVelocity, setBirdVelocity] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gamePaused, setGamePaused] = useState(false);
+  const [gameOver, setGameOver] = useState(false); // Nuevo estado para controlar el estado de juego
   const gravity = -0.25;
   const tubeWidth = 52;
   const tubeHeight = 320;
@@ -42,7 +43,7 @@ function App() {
   }, [gameStarted, gamePaused]);
 
   useEffect(() => {
-    if (gameStarted && !gamePaused) {
+    if (gameStarted && !gamePaused && !gameOver) {
       const animate = () => {
         setBirdVelocity((prevVelocity) => prevVelocity + gravity);
         setBirdPosition((prevPosition) => prevPosition + birdVelocity);
@@ -76,6 +77,22 @@ function App() {
           return newTubes;
         });
 
+        // Detección de colisión
+        const birdRect = document.querySelector(".bird").getBoundingClientRect();
+        tubes.forEach((tube) => {
+          const upperTubeRect = document.querySelector(".tube-upper").getBoundingClientRect();
+          const lowerTubeRect = document.querySelector(".tube-lower").getBoundingClientRect();
+
+          if (
+            birdRect.right > tube.x &&
+            birdRect.left < tube.x + tubeWidth &&
+            (birdRect.top < upperTubeRect.bottom || birdRect.bottom > lowerTubeRect.top)
+          ) {
+            setGameOver(true);
+            cancelAnimationFrame(animateRef.current);
+          }
+        });
+
         animateRef.current = requestAnimationFrame(animate);
       };
 
@@ -85,11 +102,21 @@ function App() {
         cancelAnimationFrame(animateRef.current);
       };
     }
-  }, [gameStarted, gamePaused, birdVelocity, tubes]);
+  }, [gameStarted, gamePaused, birdVelocity, tubes, gameOver]);
+
+  const restartGame = () => {
+    setBasePosition(0);
+    setBirdPosition(window.innerHeight / 2);
+    setBirdVelocity(0);
+    setGameStarted(false);
+    setGamePaused(false);
+    setGameOver(false);
+    setTubes([]);
+  };
 
   return (
     <div className="App">
-      <div className="overlay" style={{ display: gamePaused ? 'block' : 'none' }} /> {/* Capa de superposición */}
+      <div className="overlay" style={{ display: gamePaused ? 'block' : 'none' }} />
       <img src={backgroundImage} alt="Background" className="background" />
       {tubes.map((tube, index) => (
         <div
@@ -143,7 +170,7 @@ function App() {
           <h2>Press SPACE or ESC to resume</h2>
         </div>
       )}
-      {gameStarted && (
+      {gameStarted && !gameOver && (
         <img
           src={birdImage}
           alt="Bird"
@@ -151,7 +178,13 @@ function App() {
           style={{ left: "100px", bottom: `${birdPosition}px` }}
         />
       )}
-      {!gameStarted && (
+      {gameOver && (
+        <div className="game-over-message">
+          <h1>GAME OVER</h1>
+          <button onClick={restartGame}>Restart</button>
+        </div>
+      )}
+      {!gameStarted && !gameOver && (
         <div className="start-message">
           <h1>FLAPPY RAMON</h1>
           <div className="bird-container">
@@ -163,4 +196,5 @@ function App() {
     </div>
   );
 }
+
 export default App;
