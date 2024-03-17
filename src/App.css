@@ -58,7 +58,6 @@
 
 .base {
   position: absolute;
-  border: 1px solid black;
 }
 
 .bird {
@@ -69,7 +68,7 @@
 }
 
 .tube {
-  position: absolute; 
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -79,8 +78,8 @@
 
 .tube img {
   position: absolute;
-  width: 100%; 
-  border: 1px solid black; 
+  width: 100%;
+  border: 1px solid black;
 }
 
 .tube .tube-upper {

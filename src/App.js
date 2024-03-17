@@ -6,7 +6,7 @@ import baseImage from "./Images/basex5.png";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
 import "./fonts.css";
-//CALLA NORWAY
+
 function App() {
   const [basePosition, setBasePosition] = useState(0);
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
@@ -22,7 +22,6 @@ function App() {
 
   const animateRef = useRef(null);
 
-  
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!gameStarted && e.keyCode === 32) {
@@ -47,40 +46,6 @@ function App() {
         setBasePosition(
           (prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)
         );
-
-        // Calcula la posición del pájaro y los tubos
-        const birdWidth = 80;
-        const birdHeight = 50;
-        const birdLeft = 100;
-        const birdRight = birdLeft + birdWidth;
-        const birdTop = birdPosition;
-        const birdBottom = birdPosition + birdHeight;
-
-        for (const tube of tubes) {
-          const upperTubeLeft = tube.x;
-          const upperTubeRight = tube.x + tubeWidth;
-          const upperTubeBottom = window.innerHeight - tube.yUpper;
-
-          const lowerTubeLeft = tube.x;
-          const lowerTubeRight = tube.x + tubeWidth;
-          const lowerTubeTop = window.innerHeight - tube.yLower - tubeHeight;
-
-          // Comprueba colisiones con los tubos superiores e inferiores
-          const isCollidingWithUpperTube =
-            birdRight > upperTubeLeft &&
-            birdLeft < upperTubeRight &&
-            birdTop < upperTubeBottom;
-          const isCollidingWithLowerTube =
-            birdRight > lowerTubeLeft &&
-            birdLeft < lowerTubeRight &&
-            birdBottom > lowerTubeTop;
-
-          if (isCollidingWithUpperTube || isCollidingWithLowerTube) {
-            console.log("Collision detected!"); 
-            cancelAnimationFrame(animateRef.current);
-            return;
-          }
-        }
 
         setTubes((prevTubes) => {
           const newTubes = prevTubes
@@ -185,7 +150,7 @@ function App() {
           <div className="bird-container">
             <img src={birdImage} alt="Bird" className="start-bird" />
           </div>
-          <h1 >PRESS ANY BUTTON TO START</h1>
+          <h1 >PRESS SPACE TO START</h1>
         </div>
       )}
     </div>
