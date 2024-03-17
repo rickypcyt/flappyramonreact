@@ -2,3 +2,6 @@
 * Luego de la mecanica del juego empezar a cambiar el fondo por la sala de ramirez o las ruinas
 * Intercambiar el fondo entre plumas y bongs
 */
+
+* To do List: 
+- Agregar que cuando toque el piso pierda el juego
