@@ -49,6 +49,20 @@
   z-index: -1;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  /* Cambia el último valor para ajustar la opacidad */
+  pointer-events: none;
+  /* Para permitir que los eventos pasen a través de la capa */
+}
+
+
+
 .base-container {
   position: absolute;
   bottom: 0;
@@ -127,5 +141,22 @@
   margin-top: 2%;
 
 }
+
+.start-message {
+  z-index: 10;
+  /* Ajusta el valor según sea necesario para que el texto esté por encima de la capa de superposición */
+}
+
+.pause-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 10;
+  color: white;
+
+}
+
 
 /*Norway TE VOY A HACER EL BUENO HP*/

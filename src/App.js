@@ -12,6 +12,7 @@ function App() {
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
   const [birdVelocity, setBirdVelocity] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
+  const [gamePaused, setGamePaused] = useState(false);
   const gravity = -0.25;
   const tubeWidth = 52;
   const tubeHeight = 320;
@@ -26,8 +27,10 @@ function App() {
     const handleKeyDown = (e) => {
       if (!gameStarted && e.keyCode === 32) {
         setGameStarted(true);
-      } else if (gameStarted && e.keyCode === 32) {
+      } else if (gameStarted && !gamePaused && e.keyCode === 32) {
         setBirdVelocity(7);
+      } else if ((e.keyCode === 80 || e.keyCode === 27 || e.keyCode === 32) && gameStarted) {
+        setGamePaused((prevPaused) => !prevPaused);
       }
     };
 
@@ -36,10 +39,10 @@ function App() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [gameStarted]);
+  }, [gameStarted, gamePaused]);
 
   useEffect(() => {
-    if (gameStarted) {
+    if (gameStarted && !gamePaused) {
       const animate = () => {
         setBirdVelocity((prevVelocity) => prevVelocity + gravity);
         setBirdPosition((prevPosition) => prevPosition + birdVelocity);
@@ -82,12 +85,12 @@ function App() {
         cancelAnimationFrame(animateRef.current);
       };
     }
-  }, [gameStarted, birdVelocity, tubes]);
+  }, [gameStarted, gamePaused, birdVelocity, tubes]);
 
   return (
     <div className="App">
+      <div className="overlay" style={{ display: gamePaused ? 'block' : 'none' }} /> {/* Capa de superposición */}
       <img src={backgroundImage} alt="Background" className="background" />
-
       {tubes.map((tube, index) => (
         <div
           key={index}
@@ -117,7 +120,6 @@ function App() {
           />
         </div>
       ))}
-
       <div className="base-container">
         <img
           src={baseImage}
@@ -135,7 +137,12 @@ function App() {
           }}
         />
       </div>
-
+      {gamePaused && (
+        <div className="pause-message">
+          <h1>PAUSED</h1>
+          <h2>Press SPACE or ESC to resume</h2>
+        </div>
+      )}
       {gameStarted && (
         <img
           src={birdImage}
@@ -150,11 +157,10 @@ function App() {
           <div className="bird-container">
             <img src={birdImage} alt="Bird" className="start-bird" />
           </div>
-          <h1 >PRESS SPACE TO START</h1>
+          <h1>PRESS SPACE TO START</h1>
         </div>
       )}
     </div>
   );
 }
-
 export default App;
