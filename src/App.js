@@ -6,7 +6,7 @@ import baseImage from "./Images/basex5.png";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
 import "./fonts.css";
-
+//CALLA NORWAY
 function App() {
   const [basePosition, setBasePosition] = useState(0);
   const [birdPosition, setBirdPosition] = useState(window.innerHeight / 2);
@@ -22,6 +22,7 @@ function App() {
 
   const animateRef = useRef(null);
 
+  
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (!gameStarted && e.keyCode === 32) {
@@ -75,7 +76,7 @@ function App() {
             birdBottom > lowerTubeTop;
 
           if (isCollidingWithUpperTube || isCollidingWithLowerTube) {
-            // Si hay colisión, detenemos el juego
+            console.log("Collision detected!"); 
             cancelAnimationFrame(animateRef.current);
             return;
           }
