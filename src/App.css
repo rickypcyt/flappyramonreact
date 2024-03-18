@@ -107,10 +107,10 @@
 
 .start-message {
   text-align: center;
-  font-size: xx-large;
+  font-size: larger;
   font-family: 'FlappyBird';
   color: white;
-  margin-top: 5%;
+  margin-top: 7%;
 }
 
 @keyframes breathing {
@@ -138,7 +138,7 @@
   animation: breathing 3s infinite;
   /* 3 segundos de duración de la animación, se repite infinitamente */
   margin-bottom: 8%;
-  margin-top: 2%;
+  margin-top: 5%;
 
 }
 
@@ -149,14 +149,18 @@
 
 .pause-message {
   position: absolute;
-  top: 50%;
+  top: 45%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
   z-index: 10;
   color: white;
-
+  font-family: 'FlappyBird';
+  font-size: larger;
+  cursor: default;
 }
+
+
 
 
 /*Norway TE VOY A HACER EL BUENO HP*/
