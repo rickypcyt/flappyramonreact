@@ -4,6 +4,7 @@
 */
 
 * To do List: 
-- Agregar que cuando toque el piso pierda el juego *In Progress
-- highest and current score display
+- Agregar que cuando toque el piso pierda el juego * Done
+- highest and current score display *In Progress
 - Cuando estes en game over no puedas poner pausa o que al darle no solo space sino tmb esc puedas reinciar el juego
+- Importar el archivo para implementar la musica del juego 
