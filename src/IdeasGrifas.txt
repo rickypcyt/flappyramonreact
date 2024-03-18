@@ -6,3 +6,4 @@
 * To do List: 
 - Agregar que cuando toque el piso pierda el juego *In Progress
 - highest and current score display
+- Cuando estes en game over no puedas poner pausa o que al darle no solo space sino tmb esc puedas reinciar el juego

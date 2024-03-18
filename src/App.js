@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 
 import backgroundImage from "./Images/bgx4.png";
-import baseImage from "./Images/basex5.png";
+import baseImage from "./Images/basex5.jpg";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
 import "./fonts.css";
