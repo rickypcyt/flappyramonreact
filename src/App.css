@@ -93,6 +93,7 @@
 .tube img {
   position: absolute;
   width: 100%;
+  opacity: 85%;
 }
 
 .tube .tube-upper {
