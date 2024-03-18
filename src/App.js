@@ -5,6 +5,7 @@ import backgroundImage from "./Images/bgnebula.png";
 import baseImage from "./Images/basex5.jpg";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
+import song from '/workspaces/flappyramonreact/src/MALDITA_RAMONA_-_CHLY_feat._Montana_Recordzzz.mp3'
 import "./fonts.css";
 
 const gravity = -0.25;
@@ -60,6 +61,9 @@ function App() {
   const handleKeyDown = useCallback((e) => {
     if (!gameStarted && e.keyCode === 32) {
       setGameStarted(true);
+      if(audioRef.current){
+        audioRef.current.play(); 
+      }
     } else if (gameStarted && !gamePaused && e.keyCode === 32) {
       setBirdVelocity(7);
     } else if ((e.keyCode === 80 || e.keyCode === 27 || e.keyCode === 32) && gameStarted) {
@@ -165,6 +169,15 @@ function App() {
     setTubes([]);
   };
 
+  const audioRef = useRef(null); 
+
+  useEffect(() => {
+    if(audioRef.current){
+      audioRef.current.src = song; 
+      audioRef.current.load(); 
+    }
+  }, []);
+
   return (
     <div className="App">
       <div className="overlay" style={{ display: gamePaused ? 'block' : 'none' }} />
@@ -217,6 +230,7 @@ function App() {
           <h1>PRESS SPACE TO START</h1>
         </div>
       )}
+      <audio ref = {audioRef} />
     </div>
   );
 }
