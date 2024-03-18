@@ -179,9 +179,9 @@ function App() {
         />
       )}
       {gameOver && (
-        <div className="game-over-message">
+        <div className="pause-message">
           <h1>GAME OVER</h1>
-          <button onClick={restartGame}>Restart</button>
+          <h1 onClick={restartGame}>CLICK HERE TO RESTART</h1>
         </div>
       )}
       {!gameStarted && !gameOver && (
