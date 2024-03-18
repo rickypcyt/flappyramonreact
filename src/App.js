@@ -13,11 +13,6 @@ const tubeHeight = 320;
 const tubeGap = 500;
 const tubeSpeed = 5;
 
-// Define constants for birdWidth, baseHeight, and baseWidth
-const birdWidth = 50;
-const baseHeight = 50;
-const baseWidth = 50;
-
 const generateRandomTubePosition = () => {
   const minY = window.innerHeight * -0.01;
   const maxY = window.innerHeight * -0.15;
@@ -59,7 +54,7 @@ function App() {
   const [gamePaused, setGamePaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [tubes, setTubes] = useState([]);
-
+  const baseRef = useRef(null); 
   const animateRef = useRef(null);
 
   const handleKeyDown = useCallback((e) => {
@@ -92,6 +87,16 @@ function App() {
     };
   }, [handleKeyPress]);
 
+  const detectBaseCollision = useCallback(() => {
+    const birdRect = document.querySelector(".bird").getBoundingClientRect();
+    const baseRect = baseRef.current.getBoundingClientRect();
+
+    if (birdRect.bottom >= baseRect.top) {
+      setGameOver(true);
+      cancelAnimationFrame(animateRef.current);
+    }
+  }, []);
+
   useEffect(() => {
     const animate = () => {
       setBirdVelocity((prevVelocity) => prevVelocity + gravity);
@@ -110,7 +115,12 @@ function App() {
         return newTubes;
       });
 
+      detectBaseCollision();
+
       const birdRect = document.querySelector(".bird").getBoundingClientRect();
+      const birdHeight = 50; // Adjust based on your bird image's height
+      const tubeGapHeight = tubeGap - tubeHeight * 2; 
+
       tubes.forEach((tube) => {
         const upperTubeRect = document.querySelector(".tube-upper").getBoundingClientRect();
         const lowerTubeRect = document.querySelector(".tube-lower").getBoundingClientRect();
@@ -124,15 +134,14 @@ function App() {
           cancelAnimationFrame(animateRef.current);
         }
       });
-      
-      const birdBottomPosition = birdPosition + birdWidth; // Adjust based on bird width
-        const baseTopPosition = window.innerHeight - baseHeight;
 
-        if (birdBottomPosition >= baseTopPosition) {
-          setGameOver(true);
-          cancelAnimationFrame(animateRef.current);
-          return;
-        }
+        // Floor Collision Detection (Updated Calculation)
+       const baseHeight = 50; // Adjust based on your base image's height
+       const birdBottomPosition = birdPosition + birdHeight - 1; // Adjusted calculation 
+       if (birdBottomPosition >= window.innerHeight - baseHeight) {
+           setGameOver(true);
+           cancelAnimationFrame(animateRef.current);
+       }
 
       animateRef.current = requestAnimationFrame(animate);
     };
@@ -167,6 +176,7 @@ function App() {
           alt="Base"
           className="base"
           style={{ left: `${basePosition}px`, bottom: "0", zIndex: 1 }}
+          ref={baseRef}
         />
         <img
           src={baseImage}

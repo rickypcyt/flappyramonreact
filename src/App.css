@@ -3,43 +3,21 @@
 /* Estilo para el contenedor principal */
 .App {
   position: relative;
-  /* Posición relativa para que los elementos internos se posicionen correctamente */
   width: auto;
-  /* Ancho del contenedor principal */
   height: 742px;
-  /* Altura del contenedor principal */
-  margin: 0 auto;
-  /* Centrar el contenedor horizontalmente */
+  margin: 0 auto; 
   overflow: hidden;
-  /* Oculta cualquier contenido que se desborde del contenedor */
 }
 
 /* Estilo para la imagen de fondo */
 .background {
   position: absolute;
-  /* Posición absoluta para que la imagen de fondo se superponga a otros elementos */
-  width: 100%;
-  /* Ancho al 100% del contenedor principal */
-  height: 100%;
-  /* Altura al 100% del contenedor principal */
+  width: 100%; 
+  height: 100%; 
   object-fit: cover;
-  /* Escala la imagen para que cubra todo el contenedor manteniendo su relación de aspecto */
-}
-
-/* Estilo para la imagen de la base */
-.base {
-  position: absolute;
-  /* Posición absoluta para que la imagen de la base se superponga a otros elementos */
-  width: auto;
-  /* Ancho de la imagen de la base */
-  height: auto;
-  /* Altura ajustada automáticamente para mantener la proporción */
-  bottom: 0;
-  /* Coloca la base en la parte inferior del contenedor principal */
 }
 
 /* App.css */
-
 .background {
   position: absolute;
   top: 0;
@@ -55,29 +33,27 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  /* Cambia el último valor para ajustar la opacidad */
-  pointer-events: none;
-  /* Para permitir que los eventos pasen a través de la capa */
+  background-color: rgba(0, 0, 0, 0.5); 
+  pointer-events: none; 
 }
-
-
 
 .base-container {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
+  background-size: 1000px 50px; /* Tiling Effect */
 }
 
-.base {
+/* Modification: Removed conflicting styles */
+.base { 
   position: absolute;
+  bottom: 0;
 }
 
 .bird {
   position: absolute;
   width: 80px;
-  /* Ajusta el tamaño del pájaro según sea necesario */
   height: auto;
 }
 
@@ -93,7 +69,7 @@
 .tube img {
   position: absolute;
   width: 100%;
-  opacity: 85%;
+  border: 1px solid black;
 }
 
 .tube .tube-upper {
@@ -117,34 +93,24 @@
   0% {
     transform: scale(1);
   }
-
-  /* Tamaño original */
   50% {
     transform: scale(0.8);
   }
-
-  /* Tamaño pequeño */
   100% {
     transform: scale(1);
   }
-
-  /* Tamaño original */
 }
 
 .start-bird {
-  width: 150px;
-  /* Tamaño original */
+  width: 150px; 
   height: 150px;
-  animation: breathing 3s infinite;
-  /* 3 segundos de duración de la animación, se repite infinitamente */
+  animation: breathing 3s infinite; 
   margin-bottom: 8%;
   margin-top: 5%;
-
 }
 
 .start-message {
   z-index: 10;
-  /* Ajusta el valor según sea necesario para que el texto esté por encima de la capa de superposición */
 }
 
 .pause-message {
@@ -159,8 +125,5 @@
   font-size: larger;
   cursor: default;
 }
-
-
-
 
 /*Norway TE VOY A HACER EL BUENO HP*/
