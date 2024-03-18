@@ -13,6 +13,11 @@ const tubeHeight = 320;
 const tubeGap = 500;
 const tubeSpeed = 5;
 
+// Define constants for birdWidth, baseHeight, and baseWidth
+const birdWidth = 50;
+const baseHeight = 50;
+const baseWidth = 50;
+
 const generateRandomTubePosition = () => {
   const minY = window.innerHeight * -0.01;
   const maxY = window.innerHeight * -0.15;
@@ -119,6 +124,15 @@ function App() {
           cancelAnimationFrame(animateRef.current);
         }
       });
+      
+      const birdBottomPosition = birdPosition + birdWidth; // Adjust based on bird width
+        const baseTopPosition = window.innerHeight - baseHeight;
+
+        if (birdBottomPosition >= baseTopPosition) {
+          setGameOver(true);
+          cancelAnimationFrame(animateRef.current);
+          return;
+        }
 
       animateRef.current = requestAnimationFrame(animate);
     };
