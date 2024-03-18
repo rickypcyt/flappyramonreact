@@ -13,7 +13,7 @@ function App() {
   const [birdVelocity, setBirdVelocity] = useState(0);
   const [gameStarted, setGameStarted] = useState(false);
   const [gamePaused, setGamePaused] = useState(false);
-  const [gameOver, setGameOver] = useState(false); // Nuevo estado para controlar el estado de juego
+  const [gameOver, setGameOver] = useState(false); 
   const gravity = -0.25;
   const tubeWidth = 52;
   const tubeHeight = 320;
@@ -23,6 +23,22 @@ function App() {
   const [tubes, setTubes] = useState([]);
 
   const animateRef = useRef(null);
+
+  // Precarga de imágenes
+  useEffect(() => {
+    const preloadImages = async () => {
+      const images = [backgroundImage, baseImage, birdImage, tubeImage];
+      await Promise.all(images.map(image => new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = resolve;
+        img.onerror = reject;
+        img.src = image;
+      })));
+      // Todas las imágenes están cargadas
+    };
+
+    preloadImages();
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -41,6 +57,20 @@ function App() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [gameStarted, gamePaused]);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.keyCode === 32 && gameOver) {
+        restartGame();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [gameOver]);
 
   useEffect(() => {
     if (gameStarted && !gamePaused && !gameOver) {
@@ -77,7 +107,6 @@ function App() {
           return newTubes;
         });
 
-        // Detección de colisión
         const birdRect = document.querySelector(".bird").getBoundingClientRect();
         tubes.forEach((tube) => {
           const upperTubeRect = document.querySelector(".tube-upper").getBoundingClientRect();
@@ -167,7 +196,7 @@ function App() {
       {gamePaused && (
         <div className="pause-message">
           <h1>PAUSED</h1>
-          <h2>Press SPACE or ESC to resume</h2>
+          <h2>PRESS ESC OR SPACE TO CONTINUE</h2>
         </div>
       )}
       {gameStarted && !gameOver && (
@@ -181,7 +210,7 @@ function App() {
       {gameOver && (
         <div className="pause-message">
           <h1>GAME OVER</h1>
-          <h1 onClick={restartGame}>CLICK HERE TO RESTART</h1>
+          <h1>Press SPACE to restart</h1>
         </div>
       )}
       {!gameStarted && !gameOver && (
