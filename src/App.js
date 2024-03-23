@@ -19,6 +19,7 @@ const generateRandomTubePosition = () => {
   const minY = window.innerHeight * -0.01;
   const maxY = window.innerHeight * -0.15;
   const randomY = Math.random() * (maxY - minY) + minY;
+  const id = Date.now(); 
   return { x: window.innerWidth, yUpper: randomY, yLower: randomY - 10 };
 };
 
@@ -58,6 +59,7 @@ function App() {
   const [tubes, setTubes] = useState([]);
   const baseRef = useRef(null); 
   const animateRef = useRef(null);
+  const [score, setScore] = useState(0); 
 
   const handleKeyDown = useCallback((e) => {
     if (!gameStarted && e.keyCode === 32) {
@@ -104,61 +106,57 @@ function App() {
 
   useEffect(() => {
     const animate = () => {
+      // Update bird's velocity and position
       setBirdVelocity((prevVelocity) => prevVelocity + gravity);
       setBirdPosition((prevPosition) => prevPosition + birdVelocity);
+      // Update base position for a moving effect
       setBasePosition((prevPosition) => (prevPosition + 1) % (window.innerWidth + 100));
-
+  
+      // Update tubes: move them, check for passed tubes, and add new ones if needed
       setTubes((prevTubes) => {
-        const newTubes = prevTubes
-          .map((tube) => ({ ...tube, x: tube.x - tubeSpeed }))
-          .filter((tube) => tube.x > -tubeWidth);
+        let incrementScore = false; // Flag to determine if we should increment the score
+        const newTubes = prevTubes.map((tube) => {
+          const newX = tube.x - tubeSpeed; // Calculate new X position for the tube
+          
 
+          // Check if the tube has just passed the bird's fixed X position to increment the score
+          if (newX < 100 && tube.x >= 100 && !tube.passed) {
+            incrementScore = true; // Set the flag to increment the score
+            return { ...tube, x: newX, passed: true }; // Mark the tube as passed
+          }
+  
+          return { ...tube, x: newX }; // Update tube position without changing the passed status
+        });
+  
+        // If a tube was just passed, increment the score
+        if (incrementScore) {
+          setScore((prevScore) => prevScore + 1);
+        }
+  
+        // Check and add a new tube if the last tube has moved far enough
         if (newTubes.length === 0 || window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap) {
-          newTubes.push(generateRandomTubePosition());
+          newTubes.push({ ...generateRandomTubePosition(), passed: false });
         }
-
-        return newTubes;
+  
+        return newTubes.filter((tube) => tube.x > -tubeWidth); // Keep tubes that are still within view
       });
-
-      detectBaseCollision();
-
-      const birdRect = document.querySelector(".bird").getBoundingClientRect();
-      const birdHeight = 50; // Adjust based on your bird image's height
-      const tubeGapHeight = tubeGap - tubeHeight * 2; 
-
-      tubes.forEach((tube) => {
-        const upperTubeRect = document.querySelector(".tube-upper").getBoundingClientRect();
-        const lowerTubeRect = document.querySelector(".tube-lower").getBoundingClientRect();
-
-        if (
-          birdRect.right > tube.x &&
-          birdRect.left < tube.x + tubeWidth &&
-          (birdRect.top < upperTubeRect.bottom || birdRect.bottom > lowerTubeRect.top)
-        ) {
-          setGameOver(true);
-          cancelAnimationFrame(animateRef.current);
-        }
-      });
-
-        // Floor Collision Detection (Updated Calculation)
-       const baseHeight = 50; // Adjust based on your base image's height
-       const birdBottomPosition = birdPosition + birdHeight - 1; // Adjusted calculation 
-       if (birdBottomPosition >= window.innerHeight - baseHeight) {
-           setGameOver(true);
-           cancelAnimationFrame(animateRef.current);
-       }
-
-      animateRef.current = requestAnimationFrame(animate);
+  
+      // Request the next animation frame if the game is not paused and not over
+      if (!gamePaused && !gameOver) {
+        animateRef.current = requestAnimationFrame(animate);
+      }
     };
-
+  
+    // Start the animation loop if the game is started and not paused or over
     if (gameStarted && !gamePaused && !gameOver) {
       animateRef.current = requestAnimationFrame(animate);
     }
-
+  
+    // Cleanup function to cancel the animation frame when the component unmounts or dependencies change
     return () => {
       cancelAnimationFrame(animateRef.current);
     };
-  }, [gameStarted, gamePaused, birdVelocity, tubes, gameOver]);
+  }, [gameStarted, gamePaused, gameOver, birdVelocity, gravity, tubeSpeed, setScore, tubeGap]);
 
   const restartGame = () => {
     setBasePosition(0);
@@ -168,6 +166,7 @@ function App() {
     setGamePaused(false);
     setGameOver(false);
     setTubes([]);
+    setScore(0); 
   };
 
   const audioRef = useRef(null); 
@@ -184,6 +183,11 @@ function App() {
       <div className="overlay" style={{ display: gamePaused ? 'block' : 'none' }} />
       <img src={backgroundImage} alt="Background" className="background" />
       {tubes.map((tube, index) => <Tube key={index} tube={tube} />)}
+
+      <div className="score-display" style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', fontSize: '30px', color: 'white', zIndex: 10 }}>
+      Score: {score}
+    </div>
+
       <div className="base-container">
         <img
           src={baseImage}

@@ -89,6 +89,18 @@
   margin-top: 7%;
 }
 
+.score-display {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  color: #ffffff;
+  font-family: 'FlappyBird', Arial, sans-serif;
+  z-index: 10;
+}
+
+
 @keyframes breathing {
   0% {
     transform: scale(1);
