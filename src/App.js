@@ -8,7 +8,8 @@ import tubeImage from "./Images/pipes/pen2.png";
 import song from '/workspaces/flappyramonreact/src/MALDITA_RAMONA_-_CHLY_feat._Montana_Recordzzz.mp3'
 import "./fonts.css";
 
-const gravity = -0.25;
+const gravity = -0.4; //Increased gravity 
+const jumpStrength = 10; //Adjust jump strength for balance
 const tubeWidth = 52;
 const tubeHeight = 320;
 const tubeGap = 500;
