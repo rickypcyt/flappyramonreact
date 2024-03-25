@@ -221,6 +221,24 @@ function App() {
   return (
     <div className="App">
       <div
+        className={`overlay ${gamePaused || gameOver ? "overlay-dark" : ""}`}
+        style={{ display: gamePaused ? "block" : "none" }}
+      />
+      {gamePaused || gameOver ? (
+        <div
+          className="overlay"
+          style={{
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 9,
+          }}
+        />
+      ) : null}
+      <div
         className="overlay"
         style={{ display: gamePaused ? "block" : "none" }}
       />
@@ -228,9 +246,7 @@ function App() {
       {tubes.map((tube, index) => (
         <Tube key={index} tube={tube} />
       ))}
-      <div
-        className="score-display"
-      >
+      <div className="score-display">
         <h1>SCORE: {score}</h1>
       </div>
       <div className="base-container">
