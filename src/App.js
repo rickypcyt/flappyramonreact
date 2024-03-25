@@ -21,7 +21,10 @@ const generateRandomTubePosition = () => {
 };
 
 const Tube = ({ tube }) => (
-  <div className="tube" style={{ position: "absolute", left: tube.x, bottom: 0 }}>
+  <div
+    className="tube"
+    style={{ position: "absolute", left: tube.x, bottom: 0 }}
+  >
     <img
       className="tube-upper"
       src={tubeImage}
@@ -54,29 +57,43 @@ function App() {
   const [gamePaused, setGamePaused] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
+  const [highestScore, setHighestScore] = useState(() => {
+    const savedHighestScore = localStorage.getItem("highestScore");
+    return savedHighestScore ? parseInt(savedHighestScore) : 0;
+  });
   const [tubes, setTubes] = useState([]);
   const baseRef = useRef(null);
   const animateRef = useRef(null);
   const audioRef = useRef(null);
 
-  const handleKeyDown = useCallback((e) => {
-    if (!gameStarted && e.keyCode === 32) {
-      setGameStarted(true);
-      if (audioRef.current) {
-        audioRef.current.play();
+  const handleKeyDown = useCallback(
+    (e) => {
+      if (!gameStarted && e.keyCode === 32) {
+        setGameStarted(true);
+        if (audioRef.current) {
+          audioRef.current.play();
+        }
+      } else if (gameStarted && !gamePaused && e.keyCode === 32) {
+        setBirdVelocity(7);
+      } else if (
+        (e.keyCode === 80 || e.keyCode === 27 || e.keyCode === 32) &&
+        gameStarted &&
+        !gameOver
+      ) {
+        setGamePaused((prevPaused) => !prevPaused);
       }
-    } else if (gameStarted && !gamePaused && e.keyCode === 32) {
-      setBirdVelocity(7);
-    } else if ((e.keyCode === 80 || e.keyCode === 27 || e.keyCode === 32) && gameStarted && !gameOver) {
-      setGamePaused((prevPaused) => !prevPaused);
-    }
-  }, [gameStarted, gamePaused, gameOver]);
+    },
+    [gameStarted, gamePaused, gameOver]
+  );
 
-  const handleKeyPress = useCallback((e) => {
-    if (e.keyCode === 32 && gameOver) {
-      restartGame();
-    }
-  }, [gameOver]);
+  const handleKeyPress = useCallback(
+    (e) => {
+      if (e.keyCode === 32 && gameOver) {
+        restartGame();
+      }
+    },
+    [gameOver]
+  );
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -102,25 +119,39 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (score > highestScore) {
+      setHighestScore(score);
+      localStorage.setItem("highestScore", score);
+    }
+  }, [score, highestScore]);
+
+  useEffect(() => {
     const animate = () => {
       setBirdVelocity((prevVelocity) => prevVelocity + gravity);
       setBirdPosition((prevPosition) => prevPosition + birdVelocity);
-      setBasePosition((prevPosition) => (prevPosition + 1) % (window.innerWidth + 100));
+      setBasePosition(
+        (prevPosition) => (prevPosition + 1) % (window.innerWidth + 100)
+      );
       setTubes((prevTubes) => {
         let incrementScore = false;
-        const newTubes = prevTubes.map((tube) => {
-          const newX = tube.x - tubeSpeed;
-          if (newX < 100 && tube.x >= 100) {
-            incrementScore = true;
-          }
-          return { ...tube, x: newX };
-        }).filter((tube) => tube.x > -tubeWidth);
+        const newTubes = prevTubes
+          .map((tube) => {
+            const newX = tube.x - tubeSpeed;
+            if (newX < 100 && tube.x >= 100) {
+              incrementScore = true;
+            }
+            return { ...tube, x: newX };
+          })
+          .filter((tube) => tube.x > -tubeWidth);
 
         if (incrementScore) {
           setScore((prevScore) => prevScore + 1);
         }
 
-        if (newTubes.length === 0 || window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap) {
+        if (
+          newTubes.length === 0 ||
+          window.innerWidth - newTubes[newTubes.length - 1].x >= tubeGap
+        ) {
           newTubes.push(generateRandomTubePosition());
         }
 
@@ -133,12 +164,17 @@ function App() {
       const birdHeight = 50;
       const tubeGapHeight = tubeGap - tubeHeight * 2;
       tubes.forEach((tube) => {
-        const upperTubeRect = document.querySelector(".tube-upper").getBoundingClientRect();
-        const lowerTubeRect = document.querySelector(".tube-lower").getBoundingClientRect();
+        const upperTubeRect = document
+          .querySelector(".tube-upper")
+          .getBoundingClientRect();
+        const lowerTubeRect = document
+          .querySelector(".tube-lower")
+          .getBoundingClientRect();
         if (
           birdRect.right > tube.x &&
           birdRect.left < tube.x + tubeWidth &&
-          (birdRect.top < upperTubeRect.bottom || birdRect.bottom > lowerTubeRect.top)
+          (birdRect.top < upperTubeRect.bottom ||
+            birdRect.bottom > lowerTubeRect.top)
         ) {
           setGameOver(true);
           cancelAnimationFrame(animateRef.current);
@@ -171,7 +207,7 @@ function App() {
     setGameStarted(false);
     setGamePaused(false);
     setGameOver(false);
-    setScore(0);
+    setScore(0); // Reiniciar el contador de puntuación
     setTubes([]);
   };
 
@@ -184,12 +220,19 @@ function App() {
 
   return (
     <div className="App">
-      <div className="overlay" style={{ display: gamePaused ? 'block' : 'none' }} />
+      <div
+        className="overlay"
+        style={{ display: gamePaused ? "block" : "none" }}
+      />
       <img src={backgroundImage} alt="Background" className="background" />
-      {tubes.map((tube, index) => <Tube key={index} tube={tube} />)}
-      <div className="score-display" style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', fontSize: '30px', color: 'white', zIndex: 10 }}>
-      SCORE: {score}
-    </div>
+      {tubes.map((tube, index) => (
+        <Tube key={index} tube={tube} />
+      ))}
+      <div
+        className="score-display"
+      >
+        <h1>SCORE: {score}</h1>
+      </div>
       <div className="base-container">
         <img
           src={baseImage}
@@ -225,7 +268,8 @@ function App() {
       {gameOver && (
         <div className="pause-message">
           <h1>GAME OVER</h1>
-          <h1>Press SPACE to restart</h1>
+          <h1>HIGHEST SCORE: {highestScore}</h1>
+          <h1>PRESS SPACE TO RESTART</h1>
         </div>
       )}
       {!gameStarted && !gameOver && (
@@ -237,7 +281,7 @@ function App() {
           <h1>PRESS SPACE TO START</h1>
         </div>
       )}
-      <audio ref = {audioRef} />
+      <audio ref={audioRef} />
     </div>
   );
 }
