@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
-import backgroundImage from "./Images/bgnebula.png";
+import backgroundImage from "./Images/bgdia.png";
 import baseImage from "./Images/basex5.jpg";
 import birdImage from "./Images/ramos/ramon1.png";
 import tubeImage from "./Images/pipes/pen2.png";
-import song from '/workspaces/flappyramonreact/src/MALDITA_RAMONA_-_CHLY_feat._Montana_Recordzzz.mp3'
+import song from "./MALDITA_RAMONA_-_CHLY_feat._Montana_Recordzzz.mp3";
 import "./fonts.css";
 
+
 const gravity = -0.4; //Increased gravity 
-const jumpStrength = 10; //Adjust jump strength for balance
+//const jumpStrength = 10; //Adjust jump strength for balance
 const tubeWidth = 52;
 const tubeHeight = 320;
 const tubeGap = 500;
@@ -178,7 +179,7 @@ function App() {
       <img src={backgroundImage} alt="Background" className="background" />
       {tubes.map((tube, index) => <Tube key={index} tube={tube} />)}
       <div className="score-display" style={{ position: 'absolute', top: '20px', left: '50%', transform: 'translateX(-50%)', fontSize: '30px', color: 'white', zIndex: 10 }}>
-      Score: {score}
+      SCORE: {score}
     </div>
       <div className="base-container">
         <img

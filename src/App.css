@@ -5,15 +5,15 @@
   position: relative;
   width: auto;
   height: 742px;
-  margin: 0 auto; 
+  margin: 0 auto;
   overflow: hidden;
 }
 
 /* Estilo para la imagen de fondo */
 .background {
   position: absolute;
-  width: 100%; 
-  height: 100%; 
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -33,8 +33,8 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
-  pointer-events: none; 
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
 
 .base-container {
@@ -42,11 +42,12 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  background-size: 1000px 50px; /* Tiling Effect */
+  background-size: 1000px 50px;
+  /* Tiling Effect */
 }
 
 /* Modification: Removed conflicting styles */
-.base { 
+.base {
   position: absolute;
   bottom: 0;
 }
@@ -69,7 +70,6 @@
 .tube img {
   position: absolute;
   width: 100%;
-  border: 1px solid black;
 }
 
 .tube .tube-upper {
@@ -94,7 +94,7 @@
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 24px;
+  font-size: larger;
   color: #ffffff;
   font-family: 'FlappyBird', Arial, sans-serif;
   z-index: 10;
@@ -105,18 +105,20 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(0.8);
   }
+
   100% {
     transform: scale(1);
   }
 }
 
 .start-bird {
-  width: 150px; 
+  width: 150px;
   height: 150px;
-  animation: breathing 3s infinite; 
+  animation: breathing 3s infinite;
   margin-bottom: 8%;
   margin-top: 5%;
 }
